@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script {
                     // Create a deployment
-                    sh 'aws amplify create-deployment --app-id YOUR_AMPLIFY_APP_ID --branch-name master --source-url https://github.com/yashp119/react_app_tutorial-yash.git'
+                    sh 'aws amplify create-deployment --app-id YOUR_AMPLIFY_APP_ID --branch-name master '
                     // Start the deployment
                     sh 'aws amplify start-deployment --app-id d90tsht2x16ht --branch-name master'
                 }
