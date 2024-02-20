@@ -23,7 +23,7 @@ pipeline {
             steps {
                 script {
                     sh 'zip -r myapp.zip .'  // Create a zip file of the code
-                    sh "aws amplify create-deployment --app-id $AMPLIFY_APP_ID --branch-name master --file myapp.zip"  // Deploy the zip file
+                    sh "aws amplify start-job --app-id $AMPLIFY_APP_ID --branch-name master --file myapp.zip"  // Deploy the zip file
                 }
             }
         }
