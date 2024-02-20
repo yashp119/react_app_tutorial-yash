@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        AWS_DEFAULT_REGION = 'us-east-1' // Set your AWS region
+        AWS_DEFAULT_REGION = 'us-east-1' 
     }
     stages {
         stage('Checkout') {
@@ -11,15 +11,17 @@ pipeline {
         }
         stage('Build') {
             steps {
-                echo 'Add steps to build your project, if necessary'
+                script {
+                    // Install dependencies and build the project
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
             }
         }
         stage('Deploy') {
             steps {
                 script {
-                    // Assuming you have configured AWS CLI and your Amplify app is connected to the GitHub repo
-                    // Replace 'yourAmplifyAppId' with your actual Amplify app ID and 'yourBranchName' with the branch you want to deploy
-                    sh 'aws amplify start-job --app-id d3g3ff7letaeke --branch-name master --job-type RELEASE'
+                    sh 'aws amplify start-job --app-id d90tsht2x16ht --branch-name master --job-type RELEASE'
                 }
             }
         }
