@@ -2,33 +2,48 @@ pipeline {
     agent any
     
     environment {
-        AWS_DEFAULT_REGION = 'us-east-1'  // Set your AWS region
-        AMPLIFY_APP_ID = 'd90tsht2x16ht'  // Set your Amplify app ID
+        AWS_DEFAULT_REGION = 'us-east-1'
+        AMPLIFY_APP_ID = 'd90tsht2x16ht'
+        S3_BUCKET_NAME = 'php-bucket11'
     }
-
+    
     stages {
         stage('Checkout') {
             steps {
-                checkout scm  // Checkout code from GitHub
+                checkout scm
             }
         }
         
         stage('Build') {
             steps {
-                sh 'npm install'  // Install dependencies if any
+                script {
+                    // Install dependencies and build the project
+                    sh 'npm install'
+                    sh 'npm run build'
+                }
+            }
+        }
+        
+        stage('Create Zip') {
+            steps {
+                sh 'zip -r myapp.zip build/'
             }
         }
         
         stage('Deploy') {
             steps {
                 script {
-                    sh 'zip -r myapp.zip .'  // Create a zip file of the code
-                     sh "aws amplify create-deployment --app-id $AMPLIFY_APP_ID  --file myapp.zip"
+                    // Upload the zip file to S3
+                    sh "aws s3 cp myapp.zip s3://${S3_BUCKET_NAME}/"
+                    
+                    // Start deployment from S3
+                    def deployCommand = "aws amplify start-deployment --app-id ${AMPLIFY_APP_ID} --branch-name master --source-url s3://${S3_BUCKET_NAME}/myapp.zip"
+                    sh deployCommand
                 }
             }
         }
     }
-
+    
     post {
         success {
             echo 'Deployment successful!'
