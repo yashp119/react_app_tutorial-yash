@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     // Deploy the zip file to Amplify
-                    sh 'aws amplify start-job --app-id d90tsht2x16ht --branch-name master --job-type RELEASE --source-url myapp.zip'
+                    sh 'aws amplify create-deployment --app-id d90tsht2x16ht --branch-name master --file myapp.zip''
                 }
             }
         }
