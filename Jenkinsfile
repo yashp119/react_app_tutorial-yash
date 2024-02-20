@@ -37,7 +37,7 @@ pipeline {
                     sh "aws s3 cp myapp.zip s3://${S3_BUCKET_NAME}/"
                     
                     // Start deployment from S3
-                    def deployCommand = "aws amplify start-deployment --app-id ${AMPLIFY_APP_ID} --branch-name master --source-url s3://${S3_BUCKET_NAME}/myapp.zip"
+                    def deployCommand = "aws amplify start-deployment --app-id ${AMPLIFY_APP_ID}  --source-url s3://${S3_BUCKET_NAME}/myapp.zip"
                     sh deployCommand
                 }
             }
