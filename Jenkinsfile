@@ -18,13 +18,19 @@ pipeline {
                 }
             }
         }
+        stage('Create Zip') {
+            steps {
+                script {
+                    // Create a zip file from the built artifacts
+                    sh 'zip -r myapp.zip build/*'
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 script {
-                    // Create a deployment
-                    sh 'aws amplify create-deployment --app-id d90tsht2x16ht --branch-name master '
-                    // Start the deployment
-                    sh 'aws amplify start-deployment --app-id d90tsht2x16ht --branch-name master'
+                    // Deploy the zip file to Amplify
+                    sh 'aws amplify start-job --app-id d90tsht2x16ht --branch-name master --job-type RELEASE --source-url myapp.zip'
                 }
             }
         }
