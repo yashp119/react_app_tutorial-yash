@@ -1,40 +1,34 @@
 pipeline {
     agent any
+    
     environment {
-        AWS_DEFAULT_REGION = 'us-east-1' 
+        AWS_DEFAULT_REGION = 'us-east-1'  // Set your AWS region
+        AMPLIFY_APP_ID = 'd90tsht2x16ht'  // Set your Amplify app ID
     }
+
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                checkout scm  // Checkout code from GitHub
             }
         }
+        
         stage('Build') {
             steps {
-                script {
-                    // Install dependencies and build the project
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
+                sh 'npm install'  // Install dependencies if any
             }
         }
-        stage('Create Zip') {
-            steps {
-                script {
-                    // Create a zip file from the built artifacts
-                    sh 'zip -r myapp.zip build/*'
-                }
-            }
-        }
+        
         stage('Deploy') {
             steps {
                 script {
-                    // Deploy the zip file to Amplify
-                    sh 'aws amplify create-deployment --app-id d90tsht2x16ht --branch-name master --file myapp.zip''
+                    sh 'zip -r myapp.zip .'  // Create a zip file of the code
+                    sh "aws amplify create-deployment --app-id $AMPLIFY_APP_ID --branch-name master --file myapp.zip"  // Deploy the zip file
                 }
             }
         }
     }
+
     post {
         success {
             echo 'Deployment successful!'
